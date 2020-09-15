@@ -3,9 +3,11 @@
 """
 
 from os import getenv
+from pprint import pprint
 from nornir.init_nornir import InitNornir
 from nornir.core.task import Task, Result
 from nornir.core.configuration import logging
+from nornir.core.filter import F
 from nornir_utils.plugins.functions import print_result
 from nornir_napalm.plugins.tasks import napalm_get
 from netbox import NetBox
@@ -146,18 +148,22 @@ def main():
                                                         password=password,
                                                         secret=secret)
 
+    ## Advanced Filtering using F object and `magic` double underscore notation.
+    ## https://nornir.readthedocs.io/en/latest/howto/advanced_filtering.html
+    filtered_inventory = nornir_instance.filter(F(device_role__name__contains="switch"))
+
     # Create New Interfaces
-    result = nornir_instance.run(task=create_netbox_interfaces,
+    result = filtered_inventory.run(task=create_netbox_interfaces,
                     nb_interfaces=nb_interfaces,
                     netbox=netbox)
     print_result(result)
 
     # Update Existing Interfaces
-    result = nornir_instance.run(task=update_netbox_interfaces,
+    result = filtered_inventory.run(task=update_netbox_interfaces,
                     nb_interfaces=nb_interfaces,
                     netbox=netbox)
     print_result(result)
-
+ 
     # # Getters: https://napalm.readthedocs.io/en/latest/support/#getters-support-matrix
     # result = nornir_instance.run(task=napalm_get, getters=['vlans'])
     # print_result(result)
