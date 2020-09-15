@@ -1,0 +1,4 @@
+.env
+nornir.log
+__pycache__
+.vscode

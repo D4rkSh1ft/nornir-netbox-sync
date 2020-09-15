@@ -1,0 +1,9 @@
+## Netbox Host
+nb_host="netbox.local"
+nb_url=f"http://{nb_host}"
+nb_token=""
+
+## Network Credentials
+username=""
+password=""
+secret=""
